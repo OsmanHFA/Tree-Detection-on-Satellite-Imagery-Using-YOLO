@@ -41,12 +41,20 @@ def download_tiff_images(bucket_name, prefix, local_dir):
             blob.download_to_filename(destination_path)
             print(f"Downloaded {blob.name} to {destination_path}")
             
+import rasterio
+import numpy as np
+import matplotlib.pyplot as plt
+
 def display_tiff(tiff_path):
     with rasterio.open(tiff_path) as src:
-        image_data = src.read(1)  # Read the first band
-    
+        band1 = src.read(1)  # Red
+        band2 = src.read(2)  # Green
+        band3 = src.read(3)  # Blue
+        
+        rgb_image = np.dstack((band1, band2, band3))
+
     plt.figure(figsize=(10, 10))
-    plt.imshow(image_data)
-    plt.title('TIFF Image')
+    plt.imshow(rgb_image)
+    plt.title('TIFF Image (RGB)')
     plt.axis('off')
     plt.show()

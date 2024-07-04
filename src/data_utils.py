@@ -46,7 +46,7 @@ def display_tiff(tiff_path):
         image_data = src.read(1)  # Read the first band
     
     plt.figure(figsize=(10, 10))
-    plt.imshow(image_data, cmap='gray')
+    plt.imshow(image_data)
     plt.title('TIFF Image')
     plt.axis('off')
     plt.show()

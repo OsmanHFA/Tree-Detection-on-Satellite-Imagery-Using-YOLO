@@ -42,7 +42,7 @@ iou: 0.7
 max_det: 300
 half: false
 dnn: false
-plots: false
+plots: true
 source: null
 vid_stride: 1
 stream_buffer: false

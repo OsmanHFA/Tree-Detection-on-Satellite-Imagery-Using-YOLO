@@ -2,6 +2,8 @@ from google.cloud import storage
 import os
 import rasterio
 from matplotlib import pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
 def download_images_and_labels(bucket_name, prefix, local_dir):
     client = storage.Client()
@@ -41,9 +43,7 @@ def download_tiff_images(bucket_name, prefix, local_dir):
             blob.download_to_filename(destination_path)
             print(f"Downloaded {blob.name} to {destination_path}")
             
-import rasterio
-import numpy as np
-import matplotlib.pyplot as plt
+
 
 def display_tiff(tiff_path):
     with rasterio.open(tiff_path) as src:

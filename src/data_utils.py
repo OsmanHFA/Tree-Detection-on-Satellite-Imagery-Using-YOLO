@@ -20,7 +20,7 @@ def download_images_and_labels(bucket_name, prefix, local_dir):
     for blob in blobs:
         found_any_blob = True
         print(f"Found blob: {blob.name}")  # Debugging 
-        if any(blob.name.endswith(ext) for ext in ['.jpeg', '.jpg', '.json', '.png', '.csv', '.txt']):
+        if any(blob.name.endswith(ext) for ext in ['.xml']):
             
             # Create local directory structure if it doesn't exist
             local_path = os.path.join(local_dir, os.path.relpath(blob.name, prefix))

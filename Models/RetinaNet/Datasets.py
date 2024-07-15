@@ -3,16 +3,21 @@ import cv2
 import numpy as np
 import os
 import glob as glob
+
 from xml.etree import ElementTree as et
-from config import CLASSES, BATCH_SIZE
+from config import (
+    CLASSES, RESIZE_TO, TRAIN_DIR, BATCH_SIZE
+)
 from torch.utils.data import Dataset, DataLoader
 from custom_utils import collate_fn, get_train_transform, get_valid_transform
 
 # The dataset class.
 class CustomDataset(Dataset):
-    def __init__(self, dir_path, classes, transforms=None):
+    def __init__(self, dir_path, width, height, classes, transforms=None):
         self.transforms = transforms
         self.dir_path = dir_path
+        self.height = height
+        self.width = width
         self.classes = classes
         self.image_file_types = ['*.jpg', '*.jpeg', '*.png', '*.ppm', '*.JPG']
         self.all_image_paths = []
@@ -28,9 +33,11 @@ class CustomDataset(Dataset):
         image_name = self.all_images[idx]
         image_path = os.path.join(self.dir_path, image_name)
 
-        # Read the image.
+        # Read and preprocess the image.
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
+        image_resized = cv2.resize(image, (self.width, self.height))
+        image_resized /= 255.0
         
         # Capture the corresponding XML file for getting the annotations.
         annot_filename = os.path.splitext(image_name)[0] + '.xml'
@@ -46,7 +53,7 @@ class CustomDataset(Dataset):
         image_height = image.shape[0]
         
         # Box coordinates for xml files are extracted 
-        # and kept as is.
+        # and corrected for image size given.
         for member in root.findall('object'):
             # Get label and map the `classes`.
             labels.append(self.classes.index(member.find('name').text))
@@ -60,7 +67,26 @@ class CustomDataset(Dataset):
             # Right corner y-coordinates.
             ymax = int(member.find('bndbox').find('ymax').text)
             
-            boxes.append([xmin, ymin, xmax, ymax])
+            # Resize the bounding boxes according 
+            # to resized image `width`, `height`.
+            xmin_final = (xmin/image_width)*self.width
+            xmax_final = (xmax/image_width)*self.width
+            ymin_final = (ymin/image_height)*self.height
+            ymax_final = (ymax/image_height)*self.height
+
+            # Check that max coordinates are at least one pixel
+            # larger than min coordinates.
+            if xmax_final == xmin_final:
+                xmax_final += 1
+            if ymax_final == ymin_final:
+                ymax_final += 1
+            # Check that all coordinates are within the image.
+            if xmax_final > self.width:
+                xmax_final = self.width
+            if ymax_final > self.height:
+                ymax_final = self.height
+            
+            boxes.append([xmin_final, ymin_final, xmax_final, ymax_final])
         
         # Bounding box to tensor.
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
@@ -83,11 +109,15 @@ class CustomDataset(Dataset):
 
         # Apply the image transforms.
         if self.transforms:
-            sample = self.transforms(image=image, bboxes=target['boxes'], labels=labels)
-            image = sample['image']
+            sample = self.transforms(image = image_resized,
+                                     bboxes = target['boxes'],
+                                     labels = labels)
+            image_resized = sample['image']
             target['boxes'] = torch.Tensor(sample['bboxes'])
         
-        return image, target
+        if np.isnan((target['boxes']).numpy()).any() or target['boxes'].shape == torch.Size([0]):
+            target['boxes'] = torch.zeros((0, 4), dtype=torch.int64)
+        return image_resized, target
 
     def __len__(self):
         return len(self.all_images)
@@ -95,22 +125,14 @@ class CustomDataset(Dataset):
 # Prepare the final datasets and data loaders.
 def create_train_dataset(DIR):
     train_dataset = CustomDataset(
-        DIR, CLASSES, get_train_transform()
+        DIR, RESIZE_TO, RESIZE_TO, CLASSES, get_train_transform()
     )
     return train_dataset
-
 def create_valid_dataset(DIR):
     valid_dataset = CustomDataset(
-        DIR, CLASSES, get_valid_transform()
+        DIR, RESIZE_TO, RESIZE_TO, CLASSES, get_valid_transform()
     )
     return valid_dataset
-
-def create_test_dataset(DIR):
-    test_dataset = CustomDataset(
-        DIR, CLASSES, get_valid_transform()
-    )
-    return test_dataset
-
 def create_train_loader(train_dataset, num_workers=0):
     train_loader = DataLoader(
         train_dataset,
@@ -121,7 +143,6 @@ def create_train_loader(train_dataset, num_workers=0):
         drop_last=True
     )
     return train_loader
-
 def create_valid_loader(valid_dataset, num_workers=0):
     valid_loader = DataLoader(
         valid_dataset,
@@ -133,30 +154,19 @@ def create_valid_loader(valid_dataset, num_workers=0):
     )
     return valid_loader
 
-def create_test_loader(test_dataset, num_workers=0):
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=False,
-        num_workers=num_workers,
-        collate_fn=collate_fn,
-        drop_last=True
-    )
-    return test_loader
 
-# execute `datasets.py` using Python command from 
+# execute `datasets.py`` using Python command from 
 # Terminal to visualize sample images
 # USAGE: python datasets.py
 if __name__ == '__main__':
     # sanity check of the Dataset pipeline with sample visualization
     dataset = CustomDataset(
-        '/home/jupyter/ee_tree_counting/Data/Combined Dataset XML/train', CLASSES  # Change to your training directory path
+        TRAIN_DIR, RESIZE_TO, RESIZE_TO, CLASSES
     )
     print(f"Number of training images: {len(dataset)}")
     
     # function to visualize a single sample
-    def visualize_sample(image, target, output_dir='visualisations/Dataset'):
-        os.makedirs(output_dir, exist_ok=True)
+    def visualize_sample(image, target):
         for box_num in range(len(target['boxes'])):
             box = target['boxes'][box_num]
             label = CLASSES[target['labels'][box_num]]
@@ -176,8 +186,8 @@ if __name__ == '__main__':
                 (0, 0, 255), 
                 2
             )
-        image_name = f"{target['image_id'].item()}.jpg"
-        cv2.imwrite(os.path.join(output_dir, image_name), image)
+        cv2.imshow('Image', image)
+        cv2.waitKey(0)
         
     NUM_SAMPLES_TO_VISUALIZE = 5
     for i in range(NUM_SAMPLES_TO_VISUALIZE):

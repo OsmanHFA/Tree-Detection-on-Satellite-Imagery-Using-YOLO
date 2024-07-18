@@ -3,8 +3,8 @@ import torch
 from tqdm import tqdm
 from config import DEVICE, NUM_CLASSES, NUM_WORKERS, WEIGHTS_PATH
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
-from RetinaNet import create_model
-from Datasets import create_valid_dataset, create_valid_loader
+from model import create_model
+from datasets import create_valid_dataset, create_valid_loader
 
 # Evaluation function
 def validate(valid_data_loader, model):
@@ -45,7 +45,7 @@ def validate(valid_data_loader, model):
 
 if __name__ == '__main__':
     # Load the best model and trained weights.
-    model = create_model(num_classes=NUM_CLASSES, weights_path=WEIGHTS_PATH)
+    model = create_model(num_classes=NUM_CLASSES, size=640, weights_path=WEIGHTS_PATH)
     checkpoint = torch.load('outputs/best_model.pth', map_location=DEVICE)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.to(DEVICE).eval()

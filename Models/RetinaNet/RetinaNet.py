@@ -22,7 +22,7 @@ def create_model(num_classes=2, weights_path=None):
     return model
 
 if __name__ == '__main__':
-    weights_path = '/home/jupyter/ee_tree_counting/Models/RetinaNet/weights/retinanet_resnet50_fpn_v2_coco-5905b1c5.pth'  # Update with your path
+    weights_path = '/home/jupyter/ee_tree_counting/Models/RetinaNet/weights/retinanet_resnet50_fpn_v2_coco-5905b1c5.pth'
     model = create_model(4, weights_path=weights_path)
     print(model)
     total_params = sum(p.numel() for p in model.parameters())

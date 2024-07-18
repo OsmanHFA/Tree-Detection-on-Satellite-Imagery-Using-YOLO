@@ -74,12 +74,6 @@ class CustomDataset(Dataset):
             ymin_final = (ymin/image_height)*self.height
             ymax_final = (ymax/image_height)*self.height
 
-            # Check that max coordinates are at least one pixel
-            # larger than min coordinates.
-            if xmax_final == xmin_final:
-                xmax_final += 1
-            if ymax_final == ymin_final:
-                ymax_final += 1
             # Check that all coordinates are within the image.
             if xmax_final > self.width:
                 xmax_final = self.width
@@ -168,6 +162,8 @@ if __name__ == '__main__':
     # function to visualize a single sample
     def visualize_sample(image, target, output_dir='visualisations/Dataset'):
         os.makedirs(output_dir, exist_ok=True)
+        image_copy = (image.copy() * 255).astype(np.uint8)
+        
         for box_num in range(len(target['boxes'])):
             box = target['boxes'][box_num]
             label = CLASSES[target['labels'][box_num]]

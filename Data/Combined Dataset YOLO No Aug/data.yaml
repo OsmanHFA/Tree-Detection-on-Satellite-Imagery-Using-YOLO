@@ -1,0 +1,10 @@
+# train: ../train/images
+# val: ../valid/images
+# test: ../test/images
+train: /home/jupyter/ee_tree_counting/Data/Combined Dataset YOLO No Aug/train
+val: /home/jupyter/ee_tree_counting/Data/Combined Dataset YOLO No Aug/valid
+test: /home/jupyter/ee_tree_counting/Data/Combined Dataset YOLO No Aug/test
+
+nc: 1
+names: ['tree']
+

@@ -7,23 +7,39 @@ import time
 import argparse
 
 from model import create_model
-from config import NUM_CLASSES, DEVICE, CLASSES, WEIGHTS_PATH
+
+from config import (
+    NUM_CLASSES, DEVICE, CLASSES, WEIGHTS_PATH
+)
 
 np.random.seed(42)
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--input', help='path to input image directory')
-parser.add_argument('--imgsz', default=None, type=int, help='image resize shape')
-parser.add_argument('--threshold', default=0.25, type=float, help='detection threshold')
+parser.add_argument(
+    '-i', '--input', 
+    help='path to input image directory',
+)
+parser.add_argument(
+    '--imgsz', 
+    default=None,
+    type=int,
+    help='image resize shape'
+)
+parser.add_argument(
+    '--threshold',
+    default=0.25,
+    type=float,
+    help='detection threshold'
+)
 args = vars(parser.parse_args())
 
 os.makedirs('inference_outputs/images', exist_ok=True)
 
-COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
+COLORS = [[0, 0, 0], [255, 0, 0]]
 
 # Load the best model and trained weights.
-model = create_model(num_classes=NUM_CLASSES, weights_path=WEIGHTS_PATH)
+model = create_model(num_classes=NUM_CLASSES, size=640, weights_path=WEIGHTS_PATH)
 checkpoint = torch.load('outputs/best_model.pth', map_location=DEVICE)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.to(DEVICE).eval()
@@ -33,8 +49,8 @@ DIR_TEST = args['input']
 test_images = glob.glob(f"{DIR_TEST}/*.jpg")
 print(f"Test instances: {len(test_images)}")
 
-frame_count = 0  # To count total frames.
-total_fps = 0  # To get the final frames per second.
+frame_count = 0 # To count total frames.
+total_fps = 0 # To get the final frames per second.
 
 for i in range(len(test_images)):
     # Get the image file name for saving output later on.
@@ -75,26 +91,37 @@ for i in range(len(test_images)):
         # Filter out boxes according to `detection_threshold`.
         boxes = boxes[scores >= args['threshold']].astype(np.int32)
         draw_boxes = boxes.copy()
-        # Get all the predicted class names.
+        # Get all the predicited class names.
         pred_classes = [CLASSES[i] for i in outputs[0]['labels'].cpu().numpy()]
-
+        
         # Draw the bounding boxes and write the class name on top of it.
         for j, box in enumerate(draw_boxes):
             class_name = pred_classes[j]
             color = COLORS[CLASSES.index(class_name)]
-            # Rescale boxes.
+            # Recale boxes.
             xmin = int((box[0] / image.shape[1]) * orig_image.shape[1])
             ymin = int((box[1] / image.shape[0]) * orig_image.shape[0])
             xmax = int((box[2] / image.shape[1]) * orig_image.shape[1])
             ymax = int((box[3] / image.shape[0]) * orig_image.shape[0])
-            cv2.rectangle(orig_image, (xmin, ymin), (xmax, ymax), color[::-1], 3)
-            cv2.putText(orig_image, class_name, (xmin, ymin - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color[::-1], 2, lineType=cv2.LINE_AA)
+            cv2.rectangle(orig_image,
+                        (xmin, ymin),
+                        (xmax, ymax),
+                        color[::-1], 
+                        3)
+            cv2.putText(orig_image, 
+                        class_name, 
+                        (xmin, ymin-5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 
+                        0.8, 
+                        color[::-1], 
+                        2, 
+                        lineType=cv2.LINE_AA)
 
         cv2.imshow('Prediction', orig_image)
         cv2.waitKey(1)
         cv2.imwrite(f"inference_outputs/images/{image_name}.jpg", orig_image)
-    print(f"Image {i + 1} done...")
-    print('-' * 50)
+    print(f"Image {i+1} done...")
+    print('-'*50)
 
 print('TEST PREDICTIONS COMPLETE')
 cv2.destroyAllWindows()

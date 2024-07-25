@@ -58,3 +58,22 @@ def display_tiff(tiff_path):
     plt.title('TIFF Image (RGB)')
     plt.axis('off')
     plt.show()
+
+def display_tifff(tiff_path):
+    with rasterio.open(tiff_path) as src:
+        if src.count == 3:
+            print('3 bands detected')
+            band1 = src.read(1)  # Red
+            band2 = src.read(2)  # Green
+            band3 = src.read(3)  # Blue
+            
+            rgb_image = np.dstack((band1, band2, band3))
+
+            plt.figure(figsize=(10, 10))
+            plt.imshow(rgb_image)
+            plt.title('TIFF Image (RGB)')
+            plt.axis('off')
+            plt.show()
+        else:
+            print(f'The image has {src.count} bands. Expected 3 bands.')
+

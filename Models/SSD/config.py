@@ -11,9 +11,9 @@ WEIGHTS_PATH = '/home/jupyter/ee_tree_counting/Models/SSD/weights/ssd300_vgg16_c
 
 
 # Training images and XML files directory.
-TRAIN_DIR = '/home/jupyter/ee_tree_counting/Data/Combined Dataset XML No Aug/train'
+TRAIN_DIR = '/home/jupyter/ee_tree_counting/Data/Final Tree Dataset XML/train'
 # Validation images and XML files directory.
-VALID_DIR = '/home/jupyter/ee_tree_counting/Data/Combined Dataset XML No Aug/valid'
+VALID_DIR = '/home/jupyter/ee_tree_counting/Data/Final Tree Dataset XML/valid'
 
 # Classes: 0 index is reserved for background.
 CLASSES = [

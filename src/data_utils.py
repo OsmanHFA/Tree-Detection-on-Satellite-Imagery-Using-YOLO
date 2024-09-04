@@ -17,10 +17,12 @@ def download_images_and_labels(bucket_name, prefix, local_dir):
     blobs = bucket.list_blobs(prefix=prefix)
     found_any_blob = False
     
+    supported_extensions = ['.xml', '.txt', '.jpg', '.jpeg', '.png', '.tif', '.tiff']  # Add image extensions as needed
+    
     for blob in blobs:
         found_any_blob = True
         print(f"Found blob: {blob.name}")  # Debugging 
-        if any(blob.name.endswith(ext) for ext in ['.xml']):
+        if any(blob.name.endswith(ext) for ext in supported_extensions):
             
             # Create local directory structure if it doesn't exist
             local_path = os.path.join(local_dir, os.path.relpath(blob.name, prefix))
@@ -68,7 +70,7 @@ def display_tifff(tiff_path):
             band3 = src.read(3)  # Blue
             
             rgb_image = np.dstack((band1, band2, band3))
-
+            
             plt.figure(figsize=(10, 10))
             plt.imshow(rgb_image)
             plt.title('TIFF Image (RGB)')

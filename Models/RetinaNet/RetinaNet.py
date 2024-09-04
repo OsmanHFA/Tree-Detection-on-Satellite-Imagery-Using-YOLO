@@ -6,11 +6,12 @@ from torchvision.models.detection.retinanet import RetinaNetClassificationHead
 
 def create_model(num_classes=2, weights_path=None):
     model = torchvision.models.detection.retinanet_resnet50_fpn_v2(
-        weights=None if weights_path else RetinaNet_ResNet50_FPN_V2_Weights.COCO_V1
+        # weights=None if weights_path else RetinaNet_ResNet50_FPN_V2_Weights.COCO_V1
+        weights=None
     )
     if weights_path:
         state_dict = torch.load(weights_path)
-        model.load_state_dict(state_dict)
+        model.load_state_dict(state_dict, strict=False)
         
     num_anchors = model.head.classification_head.num_anchors
     model.head.classification_head = RetinaNetClassificationHead(

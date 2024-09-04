@@ -1,0 +1,30 @@
+# 120/120 iterations complete ✅ (38506.17s)
+# Results saved to runs/detect/tune2 - YOLOv8s-small
+# Best fitness=0.53935 observed at iteration 111
+# Best fitness metrics are {'metrics/precision(B)': 0.93391, 'metrics/recall(B)': 0.87026, 'metrics/mAP50(B)': 0.91705, 'metrics/mAP50-95(B)': 0.49738, 'val/box_loss': 0.69848, 'val/cls_loss': 0.28714, 'val/dfl_loss': 1.42537, 'fitness': 0.53935}
+# Best fitness model is runs/detect/yolov8s_small_tuned128
+# Best fitness hyperparameters are printed below.
+
+lr0: 0.00233
+lrf: 0.01158
+momentum: 0.82094
+weight_decay: 0.00073
+warmup_epochs: 3.72712
+warmup_momentum: 0.48724
+box: 3.1967
+cls: 0.2
+dfl: 1.55592
+hsv_h: 0.01766
+hsv_s: 0.29574
+hsv_v: 0.24881
+degrees: 0.0
+translate: 0.04018
+scale: 0.30976
+shear: 0.0
+perspective: 0.0
+flipud: 0.0
+fliplr: 0.16541
+bgr: 0.0
+mosaic: 0.9844
+mixup: 0.0
+copy_paste: 0.0

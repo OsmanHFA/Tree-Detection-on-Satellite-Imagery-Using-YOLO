@@ -19,6 +19,7 @@ lib64/
 parts/
 sdist/
 var/
+/Data
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -54,6 +55,7 @@ cover/
 # Translations
 *.mo
 *.pot
+*.pth
 
 # Django stuff:
 *.log

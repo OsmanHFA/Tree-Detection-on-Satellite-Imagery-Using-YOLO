@@ -1,17 +1,40 @@
-# EE Tree Counting
+# Tree Counting with Computer Vision
 
-This project aims to develop a model that counts the number of trees in satellite images.
+This project focuses on developing deep learning models to accurately count trees in satellite imagery, employing state-of-the-art object detection methods.
 
-## Directory Structure
+## Deep Learning Models:
+- **SSD (Single-shot Detector)**: A pioneering single-stage object detection model.
+- **RetinaNet**: Utilises novel Focal Loss to handle class imbalance effectively.
+- **YOLOv8**: A fast and accurate object detection model optimised for real-time detection.
 
-- `Data/`: Contains the datasets.
-- `Models/`: Contains the model scripts.
-- `Notebooks/`: Contains the Jupyter notebooks for data exploration and preparation.
-- `src/`: Contains Python modules with reusable functions.
+## Datasets:
+1. **Roboflow Dataset**: Contains 489 aerial images featuring trees in urban and suburban areas, collated from the Roboflow platform.
+   ![Roboflow Dataset](path/to/image) <!-- Add image link here -->
+   
+2. **Geospatial Dataset**: Consists of 70 manually annotated satellite images exported from Google Earth Engine, covering various regions and challenging conditions like shadows, seasonal changes, and overlapping canopies.
+   ![Geospatial Dataset](path/to/image) <!-- Add image link here -->
 
-## Setup
+## Experiments:
+1. **Model Selection**: Evaluated SSD, RetinaNet, and YOLOv8 to identify the most effective model for tree detection.
+   ![Model Comparison](path/to/image) <!-- Add experiment result image -->
 
-1. Clone the repository.
-2. Install the required packages:
+2. **YOLOv8 Architecture Modifications**: Enhanced YOLOv8 by simplifying its architecture, improving both speed and accuracy.
+   ![YOLOv8 Modifications](path/to/image) <!-- Add comparison image -->
+
+3. **Generalization on Geospatial Dataset**: Tested the models on the Geospatial Dataset to assess performance on real-world satellite imagery.
+   ![Geospatial Evaluation](path/to/image) <!-- Add performance metrics -->
+
+## Directory Structure:
+- `Data/`: Datasets used for training and testing.
+- `Models/`: Model architecture and training scripts.
+- `Notebooks/`: Jupyter notebooks for data exploration, preprocessing, and model training.
+- `src/`: Python modules containing reusable functions for model evaluation and data processing.
+
+## Report:
+- See full project report 'Final Thesis 23083161.pdf'to read all the implementation details and the findings of the study.
+
+## Setup:
+
+1. **Clone the repository**:
    ```bash
-   pip install -r requirements.txt
+   git clone https://github.com/username/repo-name.git

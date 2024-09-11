@@ -9,20 +9,17 @@ This project focuses on developing deep learning models to accurately count tree
 
 ## Datasets:
 1. **Roboflow Dataset**: Contains 489 aerial images featuring trees in urban and suburban areas, collated from the Roboflow platform.
-   ![Roboflow Dataset](path/to/image) <!-- Add image link here -->
+   ![Roboflow Dataset](Images/Tree Dataset.png) <!-- Add image link here -->
    
 2. **Geospatial Dataset**: Consists of 70 manually annotated satellite images exported from Google Earth Engine, covering various regions and challenging conditions like shadows, seasonal changes, and overlapping canopies.
-   ![Geospatial Dataset](path/to/image) <!-- Add image link here -->
+   ![Geospatial Dataset](Images/GEE_test_images.png)
 
 ## Experiments:
 1. **Model Selection**: Evaluated SSD, RetinaNet, and YOLOv8 to identify the most effective model for tree detection.
-   ![Model Comparison](path/to/image) <!-- Add experiment result image -->
-
+   
 2. **YOLOv8 Architecture Modifications**: Enhanced YOLOv8 by simplifying its architecture, improving both speed and accuracy.
-   ![YOLOv8 Modifications](path/to/image) <!-- Add comparison image -->
 
-3. **Generalization on Geospatial Dataset**: Tested the models on the Geospatial Dataset to assess performance on real-world satellite imagery.
-   ![Geospatial Evaluation](path/to/image) <!-- Add performance metrics -->
+3. **Generalisation on Geospatial Dataset**: Tested the models on the Geospatial Dataset to assess performance on real-world satellite imagery.
 
 ## Directory Structure:
 - `Data/`: Datasets used for training and testing.
@@ -37,4 +34,7 @@ This project focuses on developing deep learning models to accurately count tree
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/username/repo-name.git
+   git clone https://github.com/OsmanHFA/Tree-Detection-on-Satellite-Imagery-Using-YOLO.git
+2. **Install the requirements**:
+   ```bash
+   pip install -r requirements.txt

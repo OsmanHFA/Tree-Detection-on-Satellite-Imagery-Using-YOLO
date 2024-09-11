@@ -9,7 +9,7 @@ This project focuses on developing deep learning models to accurately count tree
 
 ## Datasets:
 1. **Roboflow Dataset**: Contains 489 aerial images featuring trees in urban and suburban areas, collated from the Roboflow platform.
-   ![Roboflow Dataset](Images/'Tree Dataset.png') <!-- Add image link here -->
+   ![Roboflow Dataset](Images/Tree_Dataset.png) 
    
 2. **Geospatial Dataset**: Consists of 70 manually annotated satellite images exported from Google Earth Engine, covering various regions and challenging conditions like shadows, seasonal changes, and overlapping canopies.
    ![Geospatial Dataset](Images/GEE_test_images.png)
@@ -38,3 +38,4 @@ This project focuses on developing deep learning models to accurately count tree
 2. **Install the requirements**:
    ```bash
    pip install -r requirements.txt
+3. **Follow the Notebooks to reproduce the results in this experiment!**

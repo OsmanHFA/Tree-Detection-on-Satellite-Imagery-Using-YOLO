@@ -30,7 +30,7 @@ This project focuses on developing deep learning models to accurately count tree
 - `src/`: Python modules containing reusable functions for model evaluation and data processing.
 
 ## Report:
-- See full project report 'Final Thesis 23083161.pdf'to read all the implementation details and the findings of the study.
+- See full project report 'Project Report.pdf'to read all the implementation details and the findings of the study.
 
 ## Setup:
 
